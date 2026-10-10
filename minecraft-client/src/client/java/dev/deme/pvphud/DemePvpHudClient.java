@@ -34,7 +34,7 @@ public final class DemePvpHudClient implements ClientModInitializer {
         }
 
         long now = System.currentTimeMillis();
-        long window = mc.getWindow().getWindow();
+        long window = mc.getWindow().handle();
         boolean leftDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
         boolean rightDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
 
