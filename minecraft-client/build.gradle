@@ -8,6 +8,10 @@ base {
     archivesName = project.archives_base_name
 }
 
+loom {
+    splitEnvironmentSourceSets()
+}
+
 repositories {}
 
 dependencies {
