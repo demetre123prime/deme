@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "deme_pvp_hud",
+  "version": "${version}",
+  "name": "Deme PvP HUD",
+  "description": "A lightweight client HUD with FPS, coordinates, CPS, and movement keys.",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.deme.pvphud.DemePvpHudClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
