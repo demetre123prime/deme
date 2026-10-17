@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -30,10 +30,23 @@ jobs:
         working-directory: security-audit-mod
         run: gradle build --no-daemon
 
+      - name: Prepare direct JAR download
+        run: mkdir -p release-files && cp security-audit-mod/build/libs/*.jar release-files/security-audit-mod.jar
+
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: security-audit-mod
-          path: security-audit-mod/build/libs/*.jar
+          path: release-files/security-audit-mod.jar
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish direct JAR download
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: security-audit-latest
+          name: Security Audit Mod (latest build)
+          body: "Harmless Minecraft client mod. This build does not collect personal data."
+          files: release-files/security-audit-mod.jar
+          overwrite_files: true
+          make_latest: true
