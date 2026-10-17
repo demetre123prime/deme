@@ -1,8 +1,8 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 }
 
-version = "1.0.0"
+version = "1.0.1"
 group = "dev.spudpvp"
 
 base {
