@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "security_audit",
+  "version": "${version}",
+  "name": "Security Audit",
+  "description": "Logs basic runtime metadata and optionally sends a fixed, non-sensitive audit notice.",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.spudpvp.SecurityAuditMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
