@@ -1,10 +1,5 @@
 package dev.deme.pvphud;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
-import org.lwjgl.glfw.GLFW;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -13,10 +8,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
 
 public final class DemePvpHudClient implements ClientModInitializer {
-    private static final Deque<Long> LEFT_CLICKS = new ArrayDeque<>();
-    private static final Deque<Long> RIGHT_CLICKS = new ArrayDeque<>();
-    private static boolean wasLeftDown;
-    private static boolean wasRightDown;
+    private static final int PANEL = 0xB5101420;
+    private static final int OUTLINE = 0xFF080B12;
 
     @Override
     public void onInitializeClient() {
@@ -33,43 +26,45 @@ public final class DemePvpHudClient implements ClientModInitializer {
             return;
         }
 
-        long now = System.currentTimeMillis();
-        long window = mc.getWindow().handle();
-        boolean leftDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
-        boolean rightDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
+        int screenHeight = mc.getWindow().getGuiScaledHeight();
+        int left = 8;
+        int top = screenHeight - 78;
 
-        if (leftDown && !wasLeftDown) LEFT_CLICKS.addLast(now);
-        if (rightDown && !wasRightDown) RIGHT_CLICKS.addLast(now);
-        wasLeftDown = leftDown;
-        wasRightDown = rightDown;
+        // FPS counter stays directly above the keyboard display.
+        graphics.fill(left - 4, top - 22, left + 116, top - 5, PANEL);
+        graphics.drawString(mc.font, "FPS: " + mc.getFps(), left + 3, top - 18, 0xFFFFFFFF, false);
 
-        trimOldClicks(LEFT_CLICKS, now);
-        trimOldClicks(RIGHT_CLICKS, now);
+        // Compact keyboard panel in the bottom-left corner.
+        graphics.fill(left - 4, top - 4, left + 116, top + 56, PANEL);
 
-        int x = 8;
-        int y = 8;
-        graphics.fill(x - 4, y - 4, x + 150, y + 77, 0x99090D18);
-        graphics.drawString(mc.font, "DEME HUD", x, y, 0xFF55FFFF, false);
-        graphics.drawString(mc.font, "FPS: " + mc.getFps(), x, y + 12, 0xFFFFFFFF, false);
-        graphics.drawString(mc.font, String.format("XYZ: %.1f %.1f %.1f",
-            mc.player.getX(), mc.player.getY(), mc.player.getZ()), x, y + 24, 0xFFFFFFFF, false);
-        graphics.drawString(mc.font, "CPS: " + LEFT_CLICKS.size() + " | " + RIGHT_CLICKS.size(),
-            x, y + 36, 0xFFFFD76A, false);
+        // WASD layout.
+        drawKey(graphics, mc, "W", mc.options.keyUp.isDown(), 0xFF35D7FF, left + 29, top, 18, 16);
+        drawKey(graphics, mc, "A", mc.options.keyLeft.isDown(), 0xFFFF6B9A, left + 8, top + 19, 18, 16);
+        drawKey(graphics, mc, "S", mc.options.keyDown.isDown(), 0xFFFFC857, left + 29, top + 19, 18, 16);
+        drawKey(graphics, mc, "D", mc.options.keyRight.isDown(), 0xFF8B7CFF, left + 50, top + 19, 18, 16);
 
-        String keys = (mc.options.keyUp.isDown() ? "W" : "w") + " "
-            + (mc.options.keyLeft.isDown() ? "A" : "a") + " "
-            + (mc.options.keyDown.isDown() ? "S" : "s") + " "
-            + (mc.options.keyRight.isDown() ? "D" : "d");
-        graphics.drawString(mc.font, "Keys: " + keys, x, y + 48, 0xFFB8C7FF, false);
-        graphics.drawString(mc.font,
-            (mc.options.keyJump.isDown() ? "[SPACE]" : " space ")
-            + (mc.options.keyShift.isDown() ? " [SHIFT]" : ""),
-            x, y + 60, 0xFFB8C7FF, false);
+        // Extra movement keys.
+        drawKey(graphics, mc, "SPACE", mc.options.keyJump.isDown(), 0xFF58E39B, left + 73, top, 39, 16);
+        drawKey(graphics, mc, "SHIFT", mc.options.keyShift.isDown(), 0xFFFF8A3D, left + 73, top + 19, 39, 16);
     }
 
-    private static void trimOldClicks(Deque<Long> clicks, long now) {
-        while (!clicks.isEmpty() && now - clicks.peekFirst() > 1000L) {
-            clicks.removeFirst();
-        }
+    private static void drawKey(
+        GuiGraphics graphics,
+        Minecraft mc,
+        String label,
+        boolean pressed,
+        int accent,
+        int x,
+        int y,
+        int width,
+        int height
+    ) {
+        graphics.fill(x - 1, y - 1, x + width + 1, y + height + 1, OUTLINE);
+        graphics.fill(x, y, x + width, y + height, pressed ? accent : 0xCC202838);
+
+        int textColor = pressed ? 0xFF10131B : accent;
+        int textX = x + (width - mc.font.width(label)) / 2;
+        int textY = y + (height - 8) / 2;
+        graphics.drawString(mc.font, label, textX, textY, textColor, false);
     }
 }
