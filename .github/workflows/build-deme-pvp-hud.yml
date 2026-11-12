@@ -2,7 +2,7 @@ name: Build Deme PvP HUD
 
 on:
   push:
-    branches: [fabric-pvp-hud]
+    branches: [fabric-pvp-hud, safe-hud-build-2026]
     paths:
       - 'minecraft-client/**'
       - '.github/workflows/build-deme-pvp-hud.yml'
