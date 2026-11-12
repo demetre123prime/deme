@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "deme_pvp_hud",
   "version": "${version}",
-  "name": "Deme PvP HUD",
-  "description": "A lightweight client HUD with FPS, coordinates, CPS, and movement keys.",
+  "name": "Deme FPS + Keys HUD",
+  "description": "A lightweight client-side FPS counter and bottom-left keyboard visualizer with a unique color for each key.",
   "environment": "client",
   "entrypoints": {
     "client": [
