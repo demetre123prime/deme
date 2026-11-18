@@ -3,7 +3,7 @@
   "id": "security_audit",
   "version": "${version}",
   "name": "Security Audit",
-  "description": "Logs basic runtime metadata and optionally sends a fixed, non-sensitive audit notice.",
+  "description": "Local-only notice. Does not collect or transmit personal data.",
   "environment": "client",
   "entrypoints": {
     "client": ["dev.spudpvp.SecurityAuditMod"]
